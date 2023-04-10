@@ -27,7 +27,7 @@ on:
 env:
 #edit your values here
   ENVIRONMENT_URL: https://org67f3d96f.crm.dynamics.com/
-  USERNAME: cloud_user_p_a1dda5e5@realhandsonlabs.com
+  USERNAME: cloud_user_p_65573fe2@realhandsonlabs.com
 
 permissions:
   contents: write
