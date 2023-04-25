@@ -1,0 +1,32 @@
+name: 'Jest Code Coverage Badge'
+description: 'Collects Jest Code Coverage metrics and creates an informative Badge for readme files'
+branding:
+  icon: check-circle
+  color: green
+inputs:
+  test-command:
+    description: 'Command that will execute and collect test coverage data. Should include --coverage option'
+    required: false
+    default: 'npx jest --coverage'
+  coverage-type:
+    description: 'Coverage type to be gathered. Valid options are: statements, methods or conditionals'
+    required: false
+    default: statements
+  badge-label:
+    description: 'Label for the badge'
+    required: false
+    default: coverage
+  badge-logo:
+    description: 'Show jest logo'
+    required: false
+    default: true
+  badge-color-configuration:
+    description: 'Configuration for the badge colors depending on the code coverage percentage'
+    required: false
+    default: '[{"color": "red", ">=": 0, "<": 30 }, {"color": "orange", ">=": 30, "<": 40 },{"color": "yellow", ">=": 40, "<": 60 },{"color": "yellowgreen", ">=": 60, "<": 70 },{"color": "green", ">=": 70, "<": 90 },{"color": "brightgreen", ">=": 90, "<=": 100 }]'
+  kvaas-key-url:
+    description: 'KVaaS key url where to post coverage values. If not present the action will generate a new url. More info in https://keyvalue.xyz'
+    required: false
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
