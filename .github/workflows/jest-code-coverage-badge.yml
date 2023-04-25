@@ -1,8 +1,13 @@
 name: 'Jest Code Coverage Badge'
 description: 'Collects Jest Code Coverage metrics and creates an informative Badge for readme files'
+on:
+  push:
+    branches: [ "main" ]
+    
 branding:
   icon: check-circle
   color: green
+  
 inputs:
   test-command:
     description: 'Command that will execute and collect test coverage data. Should include --coverage option'
