@@ -1,37 +1,37 @@
-name: 'Jest Code Coverage Badge'
-description: 'Collects Jest Code Coverage metrics and creates an informative Badge for readme files'
+name: 'integration test'
+
 on:
-  push:
-    branches: [ "main" ]
-    
-branding:
-  icon: check-circle
-  color: green
-  
-inputs:
-  test-command:
-    description: 'Command that will execute and collect test coverage data. Should include --coverage option'
-    required: false
-    default: 'npx jest --coverage'
-  coverage-type:
-    description: 'Coverage type to be gathered. Valid options are: statements, methods or conditionals'
-    required: false
-    default: statements
-  badge-label:
-    description: 'Label for the badge'
-    required: false
-    default: coverage
-  badge-logo:
-    description: 'Show jest logo'
-    required: false
-    default: true
-  badge-color-configuration:
-    description: 'Configuration for the badge colors depending on the code coverage percentage'
-    required: false
-    default: '[{"color": "red", ">=": 0, "<": 30 }, {"color": "orange", ">=": 30, "<": 40 },{"color": "yellow", ">=": 40, "<": 60 },{"color": "yellowgreen", ">=": 60, "<": 70 },{"color": "green", ">=": 70, "<": 90 },{"color": "brightgreen", ">=": 90, "<=": 100 }]'
-  kvaas-key-url:
-    description: 'KVaaS key url where to post coverage values. If not present the action will generate a new url. More info in https://keyvalue.xyz'
-    required: false
-runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  schedule:
+    - cron:  '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: '15.x'
+    - run: npm ci
+    - name: Badge Coverage With Provided Url
+      id: jest-coverage-with-url
+      uses: luk-schweizer/jest-code-coverage-badge-action@main
+      with:
+        kvaas-key-url: 'https://api.keyvalue.xyz/7732e373/coverage'
+        badge-label: 'coverageWithUrlProvided'
+        test-command: 'npx jest --coverage integration/dummy.test.js'
+    - run: echo "${{ steps.jest-coverage-with-url.outputs.BADGE_URL }}"
+    - name: Badge Coverage With No Provided Url
+      id: jest-coverage-without-url
+      uses: luk-schweizer/jest-code-coverage-badge-action@main
+      with:
+        test-command: 'npx jest --coverage integration/dummy.test.js'
+    - run: echo "${{ steps.jest-coverage-without-url.outputs.BADGE_URL }}"
+    - run: npm run integration-test
+      env:
+        BADGE_OUTPUT_WITH_URL_PROVIDED: ${{ steps.jest-coverage-with-url.outputs.BADGE_URL }}
+        BADGE_OUTPUT_WITH_URL_NOT_PROVIDED: ${{ steps.jest-coverage-without-url.outputs.BADGE_URL }}
