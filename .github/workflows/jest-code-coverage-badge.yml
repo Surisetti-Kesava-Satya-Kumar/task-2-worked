@@ -1,4 +1,4 @@
-name: 'Jest Code Coverage Badge'
+name: 'Jest Code Coverage'
 description: 'Collects Jest Code Coverage metrics and creates an informative Badge for readme files'
 on:
   push:
